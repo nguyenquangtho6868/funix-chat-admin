@@ -3,18 +3,23 @@ import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import AddUserDialog from "../Modals/AddUserDialog";
 import { getUsers, addUser, deleteUser } from "../Services/LoginService";
+import { toast } from "react-toastify";
+import { getMenterRate } from "../Services/RateService";
 import EditUserDialog from "../Modals/EditUserDialog";
 import AddUserExcel from "../Modals/AddUserExcel";
 import "../css/users.css";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+
 function UsersComponent() {
   const [listUser, setListUser] = useState([]);
   const [isDialog, setIsDialog] = useState(false);
   const [isExcel, setIsExcel] = useState(false);
   const [editUser, setEditUser] = useState(false);
   const [dataEdit, setDataEdit] = useState(getBottomNavigationUtilityClass);
+  const [rate, setRate] = useState("");
+  const [disRate, setDisRate] = useState(false);
   const handleOpenDialog = () => {
     setIsDialog(true);
   };
@@ -41,7 +46,21 @@ function UsersComponent() {
 
     setDataEdit(edit.row);
   };
-  console.log(typeof dataEdit);
+  const handleRate = (rate) => {
+    const data = { id: rate.id };
+    setDisRate(!disRate);
+    if (rate !== "") {
+      setRate("");
+    }
+    getMenterRate((rs) => {
+      if (rs.statusCode === 200) {
+        setRate(rs.data);
+      } else {
+        toast.error(rs.message);
+      }
+    }, data);
+  };
+  console.log(rate);
   const handleGetUser = () => {
     getUsers((res) => {
       setListUser(res.data);
@@ -56,7 +75,7 @@ function UsersComponent() {
     {
       field: "username",
       headerName: "User Name",
-      width: 350,
+      width: 200,
       editable: true,
     },
     {
@@ -71,19 +90,13 @@ function UsersComponent() {
       width: 100,
       editable: true,
     },
-    {
-      field: "password",
-      headerName: "Password",
-      width: 100,
-      editable: true,
-    },
+
     {
       field: "courses",
       headerName: "Courses",
       width: 200,
       editable: true,
       renderCell: (params) => {
-        console.log(params.value[0]);
         return (
           <div>
             {params.value.map((item, key) => {
@@ -97,7 +110,7 @@ function UsersComponent() {
       field: "id",
       headerName: "Handle",
       sortable: false,
-      width: 200,
+      width: 300,
       renderCell: (params) => (
         <div>
           <Button
@@ -115,6 +128,14 @@ function UsersComponent() {
           >
             Delete
           </Button>
+          <Button
+            variant="contained"
+            className="btn btn-danger"
+            startIcon={<DeleteIcon />}
+            onClick={() => handleRate(params)}
+          >
+            Rate
+          </Button>
         </div>
       ),
     },
@@ -124,6 +145,7 @@ function UsersComponent() {
     <div className="user">
       <div className="user-header">
         <h5>User List</h5>
+        {disRate && <h1>Rate:{rate}</h1>}
         <button className="btn btn-success" onClick={handleOpenDialog}>
           Add User
         </button>
