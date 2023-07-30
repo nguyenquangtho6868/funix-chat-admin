@@ -1,17 +1,31 @@
-
 .user-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-    border-radius: 15px;
-    padding: 1rem 1rem;
-    margin-bottom: 1rem;
-
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border-radius: 15px;
+  padding: 1rem 1rem;
+  margin-bottom: 1rem;
 }
 
 .user-header h5 {
-    opacity: 0.6;
-    margin: 0;
-    letter-spacing: 1px;
+  opacity: 0.6;
+  margin: 0;
+  letter-spacing: 1px;
+}
+/* Responsive DataGrid */
+.responsive-data-grid {
+  width: 100%;
+}
+
+/* Điều chỉnh chiều rộng của các cột khi màn hình nhỏ hơn */
+@media (max-width: 767px) {
+  .responsive-data-grid .MuiDataGrid-colCell {
+    flex-basis: 100%;
+  }
+
+  /* Ẩn tiêu đề cột để chỉ hiển thị giá trị trong các cột */
+  .responsive-data-grid .MuiDataGrid-columnHeaderTitle {
+    display: none;
+  }
 }

@@ -13,13 +13,13 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import { toast } from "react-toastify";
 import { useTheme } from "@mui/material/styles";
 import Chip from "@mui/material/Chip";
-import { addUser } from "../Services/LoginService";
+import { editUser } from "../Services/LoginService";
 import { getCourses } from "../Services/CourseService";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useState, useEffect } from "react";
 
-export default function AddUserDialog(props) {
+export default function EditUserDialog(props) {
   const [listCourse, setListCourse] = useState([
     "DBI202X",
     "NJS101X",
@@ -29,7 +29,7 @@ export default function AddUserDialog(props) {
     "RJS301X",
     "WEB101X",
   ]);
-
+  console.log(props.data.username);
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {
@@ -54,10 +54,10 @@ export default function AddUserDialog(props) {
 
   const formik = useFormik({
     initialValues: {
-      username: "",
-      email: "",
-      role: "",
-      courses: [],
+      username: props.data.username,
+      email: props.data.email,
+      role: props.data.role,
+      courses: props.data.courses,
     },
     validationSchema: Yup.object({
       username: Yup.string()
@@ -75,15 +75,18 @@ export default function AddUserDialog(props) {
     }),
     onSubmit: (values, { setSubmitting, resetForm }) => {
       props.handleClose();
+
       let data = {
         username: values.username,
         role: values.role,
         courses: values.courses,
         email: values.email,
+        id: props.data._id,
       };
-      addUser((res) => {
+
+      editUser((res) => {
         if (res.statusCode === 200) {
-          toast.success("Thêm mới thành công!", { className: "toast-message" });
+          toast.success("Edit thành công!", { className: "toast-message" });
           setSubmitting(false);
           resetForm();
           props.getUsers();
@@ -212,7 +215,7 @@ export default function AddUserDialog(props) {
 
         <DialogActions>
           <Button onClick={props.handleClose}>Cancel</Button>
-          <Button onClick={formik.handleSubmit}>Add</Button>
+          <Button onClick={formik.handleSubmit}>Edit</Button>
         </DialogActions>
       </Dialog>
     </div>
