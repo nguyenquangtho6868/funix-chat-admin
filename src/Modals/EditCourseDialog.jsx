@@ -9,57 +9,26 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { toast } from "react-toastify";
-import { useTheme } from "@mui/material/styles";
-import Chip from "@mui/material/Chip";
-import { addCourse } from "../Services/CourseService";
+
+import { editCourse } from "../Services/CourseService";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
-export default function AddCourseDialog(props) {
-  const ITEM_HEIGHT = 48;
-  const ITEM_PADDING_TOP = 8;
-  const MenuProps = {
-    PaperProps: {
-      style: {
-        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-        width: 250,
-      },
-    },
-  };
+export default function EditCourseDialog(props) {
+  const [inputBlock, setInputBlock] = useState(props.course.blocks);
+  const [popup, setPopup] = useState(props.course.popup);
 
-  const names = [
-    "DBI202X",
-    "NJS101X",
-    "NJS301X",
-    "PRF192X",
-    "PRM391X",
-    "RJS301X",
-    "WEB101X",
-  ];
-  const [inputBlock, setInputBlock] = useState(null);
-  const [popup, setPopup] = useState(null);
   const handleTimes = (e) => {
     setPopup(e.target.value);
   };
   const handleInputBlock = (e) => {
     setInputBlock(e.target.value);
   };
-  console.log(inputBlock);
-  function getStyles(name, personName, theme) {
-    return {
-      fontWeight:
-        personName.indexOf(name) === -1
-          ? theme.typography.fontWeightRegular
-          : theme.typography.fontWeightMedium,
-    };
-  }
-
-  const theme = useTheme();
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      code: "",
+      name: props.course.name,
+      code: props.course.code,
     },
     validationSchema: Yup.object({
       name: Yup.string()
@@ -70,14 +39,15 @@ export default function AddCourseDialog(props) {
     onSubmit: (values, { setSubmitting, resetForm }) => {
       props.handleClose();
       let data = {
+        id: props.course._id,
         name: values.name,
         code: values.code,
         popup: popup,
         blocks: inputBlock,
       };
-      addCourse((res) => {
+      editCourse((res) => {
         if (res.statusCode === 200) {
-          toast.success("Thêm mới thành công!", { className: "toast-message" });
+          toast.success("Edit thành công!", { className: "toast-message" });
           setSubmitting(false);
           resetForm();
           props.getUsers();
@@ -133,7 +103,7 @@ export default function AddCourseDialog(props) {
         <DialogActions>
           <FormControl variant="standard" fullWidth>
             <InputLabel>Time Popup Tiếp tục Block</InputLabel>
-            <Select onChange={handleTimes}>
+            <Select value={popup} onChange={handleTimes}>
               <MenuItem value={"1"}>1</MenuItem>
               <MenuItem value={"2"}>2</MenuItem>
               <MenuItem value={"3"}>3</MenuItem>
@@ -146,13 +116,14 @@ export default function AddCourseDialog(props) {
             <InputLabel>Time Block</InputLabel>
             <Input
               placeholder="Nhập Thời Gian 1 Block"
+              value={inputBlock}
               onChange={handleInputBlock}
             />
           </FormControl>
         </DialogActions>
         <DialogActions>
           <Button onClick={props.handleClose}>Cancel</Button>
-          <Button onClick={formik.handleSubmit}>Add</Button>
+          <Button onClick={formik.handleSubmit}>Edit</Button>
         </DialogActions>
       </Dialog>
     </div>

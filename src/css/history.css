@@ -1,0 +1,19 @@
+.history {
+  padding-right: 1rem;
+}
+
+.history-btn-filter {
+  background-color: bisque !important;
+}
+
+.history-filter-date {
+  padding: 0 !important;
+}
+
+.history-filter {
+  justify-content: space-between;
+}
+
+.history-filter-item-text {
+  margin-bottom: 1rem !important;
+}

@@ -6,6 +6,7 @@ import NavbarComponent from "./Navbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import HistoryIcon from "@mui/icons-material/History";
 import { AuthContext } from "../Context/AuthProvider";
 import "../css/home.css";
 
@@ -94,6 +95,12 @@ function HomeComponent() {
             <div className="main-item">
               <MenuBookIcon />
               <h6 className="ml-2">Courses</h6>
+            </div>
+          </Link>
+          <Link to={"/home/history"} className="main-item-link">
+            <div className="main-item">
+              <HistoryIcon />
+              <h6 className="ml-2">History</h6>
             </div>
           </Link>
         </div>

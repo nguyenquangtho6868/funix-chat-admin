@@ -2,39 +2,32 @@ import { useState } from "react";
 import "../css/excel.css";
 import Button from "@mui/material/Button";
 import DialogActions from "@mui/material/DialogActions";
+
 import * as XLSX from "xlsx";
 import { Box } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { toast } from "react-toastify";
 import { addUser } from "../Services/LoginService";
 
-export default function AddUserExcel({ handleClose, handleGet }) {
+export default function AddUserExcelMentor({ handleClose, handleGet }) {
   const [excelFile, setExcelFile] = useState(null);
   const [submit, setSubmit] = useState(false);
   const [subCon, setSubCon] = useState(false);
-  const [excelFileError, setExcelFileError] = useState(null);
+  const [requestFalse, setRequestFalse] = useState([]);
+  const [requestTrue, setRequestTrue] = useState([]);
   const [excelData, setExcelData] = useState([]);
   const [convert, setConvert] = useState([]);
-  const fileType = ["application/vnd.ms-excel"];
 
   const handleFile = (e) => {
     let selectedFile = e.target.files[0];
-    if (selectedFile) {
-      // console.log(selectedFile.type);
-      if (selectedFile && fileType.includes(selectedFile.type)) {
-        let reader = new FileReader();
-        reader.readAsArrayBuffer(selectedFile);
-        reader.onload = (e) => {
-          setExcelFileError(null);
-          setExcelFile(e.target.result);
-        };
-      } else {
-        setExcelFileError("Please select only excel file types");
-        setExcelFile(null);
-      }
-    } else {
-      console.log("plz select your file");
-    }
+
+    console.log(selectedFile.name);
+    const reader = new FileReader();
+    reader.readAsArrayBuffer(selectedFile);
+    reader.onload = (e) => {
+      setExcelFile(e.target.result);
+    };
+    console.log(reader);
   };
   // submit function
   console.log(excelFile);
@@ -50,27 +43,16 @@ export default function AddUserExcel({ handleClose, handleGet }) {
       setExcelData(null);
     }
   };
-  console.log(excelData);
 
   const handleConvert = () => {
     setConvert(
       excelData
         ? excelData.map((e) => {
             return {
-              username: e.username,
-              courses: e.courses.split(" , ").map((objStr) => {
-                const obj = {};
-                const keyValuePairs = objStr.split(" ");
-
-                keyValuePairs.forEach((pair) => {
-                  const [key, value] = pair.split(":");
-                  obj[key] = value;
-                });
-
-                return obj;
-              }),
-              role: e.role,
-              email: e.email,
+              username: e["Student Name"],
+              courses: [{ name: "mặc định", code: e["Subject"] }],
+              role: "MENTOR",
+              email: e["Account LMS"],
             };
           })
         : null
@@ -84,10 +66,12 @@ export default function AddUserExcel({ handleClose, handleGet }) {
       convert.map((con) =>
         addUser((res) => {
           if (res.statusCode === 200) {
+            setRequestTrue((pre) => [...pre, { ...con, type: "thanhcong" }]);
             toast.success("Thêm mới thành công!", {
               className: "toast-message",
             });
           } else {
+            setRequestFalse((pre) => [...pre, { ...con, type: "thatbai" }]);
             if (res.message) {
               toast.error(res.message, { className: "toast-message" });
             } else {
@@ -103,6 +87,7 @@ export default function AddUserExcel({ handleClose, handleGet }) {
     setSubCon(false);
     handleGet();
   };
+
   const columns = [
     {
       field: "username",
@@ -132,7 +117,7 @@ export default function AddUserExcel({ handleClose, handleGet }) {
         return (
           <div>
             {params.value.map((item, key) => {
-              return <span key={key}> {item.code + ","}</span>;
+              return <span key={key}> {item.code}</span>;
             })}
           </div>
         );
@@ -141,6 +126,7 @@ export default function AddUserExcel({ handleClose, handleGet }) {
   ];
   return (
     <div className="excel">
+      <h1>EXCEL MENTOR</h1>
       <div className="container">
         {/* upload file section */}
         <div className="form">
@@ -205,6 +191,24 @@ export default function AddUserExcel({ handleClose, handleGet }) {
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
       </DialogActions>
+      {requestFalse.map((res) => {
+        return (
+          <div>
+            <p>{res.username}</p>
+            <p>{res.email}</p>
+            <p style={{ backgroundColor: "red" }}>{res.type}</p>
+          </div>
+        );
+      })}
+      {requestTrue.map((res) => {
+        return (
+          <div>
+            <p>{res.username}</p>
+            <p>{res.email}</p>
+            <p style={{ backgroundColor: "green" }}>{res.type}</p>
+          </div>
+        );
+      })}
     </div>
   );
 }

@@ -2,11 +2,12 @@ import { Box, getBottomNavigationUtilityClass } from "@mui/material";
 import { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import AddUserDialog from "../Modals/AddUserDialog";
-import { getUsers, addUser, deleteUser } from "../Services/LoginService";
+import { getUsers, deleteUser } from "../Services/LoginService";
 import { toast } from "react-toastify";
 import { getMenterRate } from "../Services/RateService";
 import EditUserDialog from "../Modals/EditUserDialog";
-import AddUserExcel from "../Modals/AddUserExcel";
+import AddUserExcelStudent from "../Modals/AddUserExcelStudent";
+import AddUserExcelMentor from "../Modals/AddUserExcelMentor";
 import "../css/users.css";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -16,6 +17,7 @@ function UsersComponent() {
   const [listUser, setListUser] = useState([]);
   const [isDialog, setIsDialog] = useState(false);
   const [isExcel, setIsExcel] = useState(false);
+  const [isMentor, setIsMentor] = useState(false);
   const [editUser, setEditUser] = useState(false);
   const [dataEdit, setDataEdit] = useState(getBottomNavigationUtilityClass);
   const [rate, setRate] = useState("");
@@ -26,10 +28,14 @@ function UsersComponent() {
   const handleOpenExcel = () => {
     setIsExcel(true);
   };
+  const handleOpenExcelMentor = () => {
+    setIsMentor(true);
+  };
   const handleCloseDialog = () => {
     setIsDialog(false);
     setEditUser(false);
     setIsExcel(false);
+    setIsMentor(false);
   };
 
   const handleDeleteUser = (data) => {
@@ -150,7 +156,10 @@ function UsersComponent() {
           Add User
         </button>
         <button className="btn btn-success" onClick={handleOpenExcel}>
-          Add Users(excel)
+          Add Users excel Student
+        </button>
+        <button className="btn btn-success" onClick={handleOpenExcelMentor}>
+          Add Users excel Mentor
         </button>
       </div>
       <div>
@@ -185,7 +194,13 @@ function UsersComponent() {
         />
       )}
       {isExcel && (
-        <AddUserExcel
+        <AddUserExcelStudent
+          handleClose={handleCloseDialog}
+          handleGet={handleGetUser}
+        />
+      )}
+      {isMentor && (
+        <AddUserExcelMentor
           handleClose={handleCloseDialog}
           handleGet={handleGetUser}
         />

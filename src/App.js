@@ -5,6 +5,9 @@ import { ToastContainer } from "react-toastify";
 import AuthLoginProvider from "./Context/AuthProvider";
 import UsersComponent from "./components/Users";
 import CoursesComponent from "./components/Course";
+import HistoryComponent from "./components/History";
+import ViewChatHistory from "./components/ViewChatHistory";
+import Setting from "./components/Setting";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
@@ -17,7 +20,13 @@ function App() {
           <Route path="/home" element={<HomeComponent />}>
             <Route path="" element={<UsersComponent />} />
             <Route path="courses" element={<CoursesComponent />} />
+            <Route path="history" element={<HistoryComponent />} />
+            <Route path="setting" element={<Setting />} />
           </Route>
+          <Route
+            path="view-chat-history/:roomId"
+            element={<ViewChatHistory />}
+          />
         </Routes>
         <ToastContainer />
       </AuthLoginProvider>

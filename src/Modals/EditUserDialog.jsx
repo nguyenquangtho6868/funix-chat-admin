@@ -51,7 +51,12 @@ export default function EditUserDialog(props) {
   }
 
   const theme = useTheme();
-
+  const handleChipDelete = (value) => {
+    const updatedCourses = formik.values.courses.filter(
+      (course) => course !== value
+    );
+    formik.setFieldValue("courses", updatedCourses);
+  };
   const formik = useFormik({
     initialValues: {
       username: props.data.username,
@@ -190,7 +195,14 @@ export default function EditUserDialog(props) {
               renderValue={(selected) => (
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                   {selected.map((value, key) => (
-                    <Chip key={key} label={value.code} />
+                    <Chip
+                      key={key}
+                      label={value.code}
+                      onDelete={() => handleChipDelete(value)}
+                      onMouseDown={(event) => {
+                        event.stopPropagation();
+                      }}
+                    />
                   ))}
                 </Box>
               )}
