@@ -172,9 +172,11 @@ function HistoryComponent() {
     setSubject(e.target.value);
   };
   const handleFrom = (e) => {
-    setFrom(dayjs(e.$d).format("DD/MM/YYYY"));
+    //console.log(dayjs(e.$d).format("D/MM/YYYY"));
+    setFrom(dayjs(e.$d)?.format("D/MM/YYYY"));
   };
   const handleTo = (e) => {
+    // console.log(e);
     setTo(dayjs(e.$d).format("DD/MM/YYYY"));
   };
   const handleChangePage = (newPage) => {
@@ -307,7 +309,7 @@ function HistoryComponent() {
               <DatePicker
                 className="history-filter-item-text"
                 label="From"
-                value={from}
+                //value={from}
                 onChange={(newValue) => handleFrom(newValue)}
                 renderInput={(props) => <TextField {...props} />}
               />
@@ -326,7 +328,7 @@ function HistoryComponent() {
               <DatePicker
                 className="history-filter-item-text"
                 label="To"
-                value={to}
+                //value={to}
                 onChange={(newValue) => handleTo(newValue)}
                 renderInput={(props) => <TextField {...props} />}
               />
