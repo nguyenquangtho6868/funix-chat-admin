@@ -173,11 +173,11 @@ function HistoryComponent() {
   };
   const handleFrom = (e) => {
     //console.log(dayjs(e.$d).format("D/MM/YYYY"));
-    setFrom(dayjs(e.$d)?.format("D/MM/YYYY"));
+    setFrom(dayjs(e.$d)?.format("MM/DD/YYYY"));
   };
   const handleTo = (e) => {
     // console.log(e);
-    setTo(dayjs(e.$d).format("DD/MM/YYYY"));
+    setTo(dayjs(e.$d).format("MM/DD/YYYY"));
   };
   const handleChangePage = (newPage) => {
     setPage(newPage);
